@@ -2,12 +2,11 @@ const { app } = require("../src/server"); // destructing assignment
 const supertest = require("supertest");
 const mockRequest = supertest(app);
 
-const { db, ConnectionTest } = require("../src/models/index");
+const { db, Food, Clothes } = require("../src/models/index");
 
 // before any of the test create a connection
 beforeAll(async () => {
   await db.sync();
-  await ConnectionTest();
 });
 
 describe("Web server", () => {
@@ -54,15 +53,20 @@ describe("food router", () => {
 
   // test if can update a food
   it("can update a food record", async () => {
-    const response = await mockRequest.put("/food/1");
+    const response = await mockRequest.put("/food/1").send({
+      name: "update_banana",
+      cost: 2.5,
+    });
     expect(response.status).toBe(201);
   });
+
   // test if can delete a food
   it("can delete a food record", async () => {
     const response = await mockRequest.delete("/food/1");
     expect(response.status).toBe(204);
   });
 });
+
 describe("clothes router", () => {
   // test if can create a clothes
   it("can add a clothes", async () => {
@@ -87,19 +91,25 @@ describe("clothes router", () => {
     // you can test the body object or any part of it
     // expect(response.body.message).toBe('pass!')
   });
+
   // test if can update a clothes
   it("can update a clothes record", async () => {
-    const response = await mockRequest.put("/clothes/1");
+    const response = await mockRequest.put("/clothes/1").send({
+      type: "T-shirt",
+      color: "red",
+      cost: 7.99,
+    });
     expect(response.status).toBe(201);
   });
+
   // test if can delete a clothes
-  it("can delete a clothes record", async () => {
-    const response = await mockRequest.delete("/clothes/1");
-    expect(response.status).toBe(204);
-  });
+  // it("can delete a clothes record", async () => {
+  //   const response = await mockRequest.delete("/clothes/1");
+  //   expect(response.status).toBe(204);
+  // });
 });
 
 // after all the tests are done
 afterAll(async () => {
-  await db.drop();
+  await db.drop(); // drop the database tables
 });

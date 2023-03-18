@@ -26,6 +26,7 @@ class Collection {
 
   async delete(id) {
     const item = await this.model.findByPk(id);
+    console.log(item);
     if (!item) throw new Error(`Item with id ${id} not found`);
     return item.destroy();
   }

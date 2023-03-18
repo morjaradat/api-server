@@ -2,11 +2,13 @@ const express = require("express");
 const app = express();
 const notFoundHandler = require("./error-handler/404");
 const serverErrorHandler = require("./error-handler/500");
+const logger = require("./middleware/logger");
+
 const foodRouter = require("./routes/food.route");
 const clothesRouter = require("./routes/clothes.route");
 
 app.use(express.json());
-
+app.use(logger);
 app.use(foodRouter);
 app.use(clothesRouter);
 

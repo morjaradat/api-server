@@ -32,18 +32,24 @@ async function updateFood(req, res) {
   let foodId = parseInt(req.params.id);
   let updateFood = req.body; //the one that the form will send to us from the frontend
   //to update the food i need to find it first then update it
-  let foundFood = await foodCollection.update(foodId, updateFood);
-  res.status(201).json(foundFood);
+  try {
+    let foundFood = await foodCollection.update(foodId, updateFood);
+    res.status(201).json(foundFood);
+  } catch (error) {
+    res.status(500);
+  }
 }
 async function deleteFood(req, res) {
   //just make sure to parse it into int because it will be a number but in string format
   let foodId = parseInt(req.params.id);
-  let deleteFood = foodCollection.delete(foodId);
-
-  //if we have the name id instead of foodId we can use a short cut
-  //   let deleteFood = await food.destroy({ where: { id } });
-
-  res.status(204).json(deleteFood); //it will return the id of the deleted person
+  try {
+    let deleteFood = await foodCollection.delete(foodId);
+    //if we have the name id instead of foodId we can use a short cut
+    //   let deleteFood = await food.destroy({ where: { id } });
+    res.status(204).json(deleteFood); //it will return the id of the deleted person
+  } catch (error) {
+    res.status(500);
+  }
 }
 
 module.exports = foodRouter;
