@@ -1,6 +1,5 @@
+const e = require("express");
 const express = require("express");
-
-//in this line we are taking the routing functionality from express
 
 const { clothesCollection } = require("../models/index.js");
 
@@ -30,20 +29,24 @@ async function createClothes(req, res) {
 
 async function updateClothes(req, res) {
   let clothesId = parseInt(req.params.id);
-  let updateClothes = req.body; //the one that the form will send to us from the frontend
-  //to update the clothes i need to find it first then update it
-  let foundClothes = await clothesCollection.update(clothesId, updateClothes);
-  res.status(201).json(foundClothes);
+  let updateClothes = req.body;
+  //TODO (DONE) refactor it
+  let foundClothes = await clothesCollection.getById(clothesId);
+  if (foundClothes) {
+    let updatedClothes = await foundClothes.update(updateClothes);
+    res.status(201).json(updatedClothes);
+  } else {
+    res.status(404);
+  }
 }
 async function deleteClothes(req, res) {
-  //just make sure to parse it into int because it will be a number but in string format
   let clothesId = parseInt(req.params.id);
-  let deleteClothes = clothesCollection.delete(clothesId);
-
-  //if we have the name id instead of clothesId we can use a short cut
-  //   let deleteClothes = await clothes.destroy({ where: { id } });
-
-  res.status(204).json(deleteClothes); //it will return the id of the deleted person
+  try {
+    let deleteClothes = await clothesCollection.delete(clothesId);
+    res.status(204).json(deleteClothes);
+  } catch (error) {
+    res.status(500);
+  }
 }
 
 module.exports = clothesRouter;

@@ -22,7 +22,7 @@ let sequelize = new Sequelize(POSTGRES_URI, sequelizeOptions);
 
 const Food = require("./food.model");
 const Clothes = require("./clothes.model");
-const Collection = require("./collection-class");
+const Collection = require("./lib/collection");
 
 //! this is wrong (not working )
 // const foodCollection = new Collection(Food);
